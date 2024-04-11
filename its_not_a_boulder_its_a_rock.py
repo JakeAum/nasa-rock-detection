@@ -8,16 +8,17 @@ while True:
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # convert image to grayscale
     edges = cv2.Canny(gray, 100, 200) # apply edge detection algorithm
-    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    # calculate the area of the contours in the left half of the screen
-    for contour in contours:
-        if cv2.pointPolygonTest(contour, (img.shape[1]//4, img.shape[0]//2), False) == 1:
-            left += cv2.contourArea(contour)
-
-    # calculate the area of the contours in the right half of the screen
-    for contour in contours:
-        if cv2.pointPolygonTest(contour, (3*img.shape[1]//4, img.shape[0]//2), False) == 1:
-            right += cv2.contourArea(contour)
+    
+    # take all of the pixels in edges on the left side of the immage and summ them
+    for i in range(0, img.shape[0]):
+        for j in range(0, img.shape[1]//2):
+            left += edges[i][j]
+    
+    # take all of the pixels in edges on the right side of the immage and summ them
+    for i in range(0, img.shape[0]):
+        for j in range(img.shape[1]//2, img.shape[1]):
+            right += edges[i][j]
 
     # print the score
     print(left, right)
+
